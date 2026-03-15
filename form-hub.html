@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Form Hub</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f7f7f6; --surface: #ffffff; --border: #e8e8e6;
+    --text: #111110; --muted: #71716e; --hint: #a8a8a4;
+    --radius: 12px; --radius-sm: 8px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111110; --surface: #1a1a19; --border: #2a2a28;
+      --text: #eeeeec; --muted: #8c8c88; --hint: #555552;
+    }
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh; height: 100vh; overflow: hidden;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    grid-template-rows: 52px 1fr;
+  }
+  .topbar {
+    grid-column: 1 / -1;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 0 1.25rem; height: 52px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .topbar-icon {
+    width: 26px; height: 26px; background: var(--text);
+    border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  }
+  .topbar-title { font-size: 14px; font-weight: 500; color: var(--text); letter-spacing: -0.01em; }
+  .topbar-sub { font-size: 12px; color: var(--hint); margin-left: auto; }
+  .sidebar {
+    background: var(--surface); border-right: 1px solid var(--border);
+    padding: 1.1rem 0.65rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.25rem;
+  }
+  .sidebar-label {
+    font-size: 10px; font-weight: 500; letter-spacing: 0.09em;
+    text-transform: uppercase; color: var(--hint);
+    padding: 0 0.5rem; margin-bottom: 0.3rem; margin-top: 0.5rem;
+  }
+  .form-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 0.48rem 0.6rem; border-radius: var(--radius-sm);
+    cursor: pointer; border: none; background: transparent;
+    width: 100%; text-align: left; transition: background 0.1s;
+    color: var(--muted); font-size: 13.5px; font-family: inherit;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .form-item:hover { background: var(--bg); color: var(--text); }
+  .form-item.active { background: var(--bg); color: var(--text); font-weight: 500; }
+  .form-item .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--hint); flex-shrink: 0; transition: background 0.1s;
+  }
+  .form-item.active .dot { background: var(--text); }
+  .add-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 0.45rem 0.6rem; border-radius: var(--radius-sm);
+    border: 1px dashed var(--border); background: transparent;
+    color: var(--hint); font-size: 12.5px; font-family: inherit;
+    cursor: pointer; width: 100%; margin-top: 0.5rem;
+    transition: border-color 0.12s, color 0.12s;
+  }
+  .add-btn:hover { border-color: var(--muted); color: var(--muted); }
+  .main { display: flex; flex-direction: column; overflow: hidden; }
+  .main-header {
+    padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
+    background: var(--surface); display: flex; align-items: center;
+    justify-content: space-between; gap: 1rem; flex-shrink: 0;
+  }
+  .main-header h1 { font-size: 15px; font-weight: 500; letter-spacing: -0.015em; color: var(--text); }
+  .main-header p { font-size: 12.5px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+  .open-btn {
+    flex-shrink: 0; display: flex; align-items: center; gap: 6px;
+    padding: 6px 13px; background: var(--text); color: var(--surface);
+    border: none; border-radius: var(--radius-sm); font-size: 12.5px;
+    font-weight: 500; font-family: inherit; cursor: pointer;
+    text-decoration: none; transition: opacity 0.15s;
+  }
+  .open-btn:hover { opacity: 0.8; }
+  .iframe-wrap { flex: 1; overflow: hidden; }
+  .iframe-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-icon">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <rect x="1" y="1" width="5" height="5" rx="1" fill="white"/>
+      <rect x="8" y="1" width="5" height="5" rx="1" fill="white"/>
+      <rect x="1" y="8" width="5" height="5" rx="1" fill="white"/>
+      <rect x="8" y="8" width="5" height="5" rx="1" fill="white" opacity="0.35"/>
+    </svg>
+  </div>
+  <span class="topbar-title">Form Hub</span>
+  <span class="topbar-sub">monday.com</span>
+</div>
+
+<div class="sidebar">
+  <div class="sidebar-label">Forms</div>
+
+  <!-- FORM ITEMS — duplicate this block to add more forms -->
+  <button class="form-item active"
+    data-url="https://forms.monday.com/forms/c63df93d5dbc8fde110d41f3ab1bd566?r=euc1"
+    data-desc="Submit a new analysis request to the data team."
+    onclick="selectForm(this)">
+    <span class="dot"></span>Analysis Request
+  </button>
+  <!-- END FORM ITEMS -->
+
+  <button class="add-btn" onclick="addFormGuide()">
+    <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    Add form
+  </button>
+</div>
+
+<div class="main">
+  <div class="main-header">
+    <div>
+      <h1 id="form-title">Analysis Request</h1>
+      <p id="form-desc">Submit a new analysis request to the data team.</p>
+    </div>
+    <a class="open-btn" id="open-link" href="https://forms.monday.com/forms/c63df93d5dbc8fde110d41f3ab1bd566?r=euc1" target="_blank">
+      <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M5 2H2a1 1 0 00-1 1v7a1 1 0 001 1h7a1 1 0 001-1V7M7 1h4m0 0v4m0-4L5 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Open in tab
+    </a>
+  </div>
+  <div class="iframe-wrap">
+    <iframe id="form-frame"
+      src="https://forms.monday.com/forms/c63df93d5dbc8fde110d41f3ab1bd566?r=euc1"
+      allowfullscreen>
+    </iframe>
+  </div>
+</div>
+
+<script>
+  function selectForm(el) {
+    document.querySelectorAll('.form-item').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    const url  = el.dataset.url;
+    const name = el.textContent.trim();
+    const desc = el.dataset.desc || '';
+    document.getElementById('form-title').textContent = name;
+    document.getElementById('form-desc').textContent  = desc;
+    document.getElementById('form-frame').src         = url;
+    document.getElementById('open-link').href         = url;
+  }
+
+  function addFormGuide() {
+    alert('To add a new form:\n\nCopy the <button class="form-item"> block in the sidebar HTML and update:\n  • data-url — your Monday.com form link\n  • data-desc — a short description\n  • The label text between the <span> and </button>');
+  }
+</script>
+</body>
+</html>
