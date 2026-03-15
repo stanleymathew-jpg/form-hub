@@ -1,6 +1,3 @@
-Index · HTML
-Copy
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,18 +17,21 @@ Copy
       --text: #eeeeec; --muted: #8c8c88; --hint: #555552;
     }
   }
-  body {
+  html, body {
+    height: 100%;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: var(--bg); color: var(--text);
-    min-height: 100vh; height: 100vh; overflow: hidden;
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    grid-template-rows: 52px 1fr;
+  }
+  .shell {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
   }
   .topbar {
-    grid-column: 1 / -1;
+    flex-shrink: 0;
     background: var(--surface); border-bottom: 1px solid var(--border);
-    padding: 0 1.25rem; display: flex; align-items: center; gap: 10px;
+    padding: 0 1.25rem; height: 52px;
+    display: flex; align-items: center; gap: 10px;
   }
   .topbar-icon {
     width: 26px; height: 26px; background: var(--text);
@@ -39,10 +39,19 @@ Copy
   }
   .topbar-title { font-size: 14px; font-weight: 500; color: var(--text); letter-spacing: -0.01em; }
   .topbar-sub { font-size: 12px; color: var(--hint); margin-left: auto; }
- 
+
+  .body-row {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+  }
+
   .sidebar {
+    width: 220px;
+    flex-shrink: 0;
     background: var(--surface); border-right: 1px solid var(--border);
-    padding: 1.1rem 0.65rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.25rem;
+    padding: 1.1rem 0.65rem; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 0.25rem;
   }
   .sidebar-label {
     font-size: 10px; font-weight: 500; letter-spacing: 0.09em;
@@ -73,12 +82,17 @@ Copy
     transition: border-color 0.12s, color 0.12s;
   }
   .add-btn:hover { border-color: var(--muted); color: var(--muted); }
- 
-  .main { display: flex; flex-direction: column; overflow: hidden; }
+
+  .main {
+    flex: 1;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
   .main-header {
+    flex-shrink: 0;
     padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
     background: var(--surface); display: flex; align-items: center;
-    justify-content: space-between; gap: 1rem; flex-shrink: 0;
+    justify-content: space-between; gap: 1rem;
   }
   .main-header h1 { font-size: 15px; font-weight: 500; letter-spacing: -0.015em; color: var(--text); }
   .main-header p { font-size: 12.5px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
@@ -90,10 +104,13 @@ Copy
     text-decoration: none; transition: opacity 0.15s;
   }
   .open-btn:hover { opacity: 0.8; }
- 
+
   .iframe-wrap {
-    flex: 1; overflow: hidden; display: flex; align-items: flex-start; justify-content: center;
-    padding: 2rem; background: var(--bg);
+    flex: 1;
+    overflow: hidden;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 1.5rem;
+    background: var(--bg);
   }
   .iframe-wrap iframe {
     width: 100%; max-width: 700px; height: 100%;
@@ -103,57 +120,63 @@ Copy
 </style>
 </head>
 <body>
- 
-<div class="topbar">
-  <div class="topbar-icon">
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-      <rect x="1" y="1" width="5" height="5" rx="1" fill="white"/>
-      <rect x="8" y="1" width="5" height="5" rx="1" fill="white"/>
-      <rect x="1" y="8" width="5" height="5" rx="1" fill="white"/>
-      <rect x="8" y="8" width="5" height="5" rx="1" fill="white" opacity="0.35"/>
-    </svg>
-  </div>
-  <span class="topbar-title">Form Hub</span>
-  <span class="topbar-sub">monday.com</span>
-</div>
- 
-<div class="sidebar">
-  <div class="sidebar-label">Forms</div>
- 
-  <!-- FORM ITEM — duplicate this to add more forms, update data-url, data-desc and label -->
-  <button class="form-item active"
-    data-url="https://forms.monday.com/forms/embed/c63df93d5dbc8fde110d41f3ab1bd566?r=euc1"
-    data-direct="https://forms.monday.com/forms/c63df93d5dbc8fde110d41f3ab1bd566?r=euc1"
-    data-desc="Submit a new analysis request to the data team."
-    onclick="selectForm(this)">
-    <span class="dot"></span>Analysis Request
-  </button>
-  <!-- END FORM ITEM -->
- 
-  <button class="add-btn" onclick="alert('To add a form:\n\n1. Copy the FORM ITEM block in the sidebar HTML\n2. Update data-url with the /embed/ iframe src\n3. Update data-direct with the regular form link\n4. Update data-desc and the label text')">
-    <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-    Add form
-  </button>
-</div>
- 
-<div class="main">
-  <div class="main-header">
-    <div>
-      <h1 id="form-title">Analysis Request</h1>
-      <p id="form-desc">Submit a new analysis request to the data team.</p>
+<div class="shell">
+
+  <div class="topbar">
+    <div class="topbar-icon">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <rect x="1" y="1" width="5" height="5" rx="1" fill="white"/>
+        <rect x="8" y="1" width="5" height="5" rx="1" fill="white"/>
+        <rect x="1" y="8" width="5" height="5" rx="1" fill="white"/>
+        <rect x="8" y="8" width="5" height="5" rx="1" fill="white" opacity="0.35"/>
+      </svg>
     </div>
-    <a class="open-btn" id="open-link" href="https://forms.monday.com/forms/c63df93d5dbc8fde110d41f3ab1bd566?r=euc1" target="_blank" rel="noopener">
-      <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M5 2H2a1 1 0 00-1 1v7a1 1 0 001 1h7a1 1 0 001-1V7M7 1h4m0 0v4m0-4L5 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Open in tab
-    </a>
+    <span class="topbar-title">Form Hub</span>
+    <span class="topbar-sub">monday.com</span>
   </div>
-  <div class="iframe-wrap">
-    <iframe id="form-frame"
-      src="https://forms.monday.com/forms/embed/c63df93d5dbc8fde110d41f3ab1bd566?r=euc1">
-    </iframe>
+
+  <div class="body-row">
+
+    <div class="sidebar">
+      <div class="sidebar-label">Forms</div>
+
+      <!-- FORM ITEM — duplicate to add more, update data-url, data-direct, data-desc and label -->
+      <button class="form-item active"
+        data-url="https://forms.monday.com/forms/embed/c63df93d5dbc8fde110d41f3ab1bd566?r=euc1"
+        data-direct="https://forms.monday.com/forms/c63df93d5dbc8fde110d41f3ab1bd566?r=euc1"
+        data-desc="Submit a new analysis request to the data team."
+        onclick="selectForm(this)">
+        <span class="dot"></span>Analysis Request
+      </button>
+      <!-- END FORM ITEM -->
+
+      <button class="add-btn" onclick="alert('To add a form:\n\n1. Copy the FORM ITEM block in the sidebar\n2. Update data-url with the Monday embed src\n3. Update data-direct with the regular form link\n4. Update data-desc and the label text')">
+        <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Add form
+      </button>
+    </div>
+
+    <div class="main">
+      <div class="main-header">
+        <div>
+          <h1 id="form-title">Analysis Request</h1>
+          <p id="form-desc">Submit a new analysis request to the data team.</p>
+        </div>
+        <a class="open-btn" id="open-link" href="https://forms.monday.com/forms/c63df93d5dbc8fde110d41f3ab1bd566?r=euc1" target="_blank" rel="noopener">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M5 2H2a1 1 0 00-1 1v7a1 1 0 001 1h7a1 1 0 001-1V7M7 1h4m0 0v4m0-4L5 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Open in tab
+        </a>
+      </div>
+      <div class="iframe-wrap">
+        <iframe id="form-frame"
+          src="https://forms.monday.com/forms/embed/c63df93d5dbc8fde110d41f3ab1bd566?r=euc1">
+        </iframe>
+      </div>
+    </div>
+
   </div>
 </div>
- 
+
 <script>
   function selectForm(el) {
     document.querySelectorAll('.form-item').forEach(b => b.classList.remove('active'));
@@ -166,4 +189,3 @@ Copy
 </script>
 </body>
 </html>
- 
