@@ -561,15 +561,15 @@ html,body{
    ═══════════════════════════════════════════════════════════ */
 
   const CONFIG = {
-    MONDAY_API_TOKEN : eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYzNzA0NjM0OCwiYWFpIjoxMSwidWlkIjo5OTkyNjU0NCwiaWFkIjoiMjAyNi0wMy0yNFQxMzo0ODozNC44MjBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MzM4MjY0ODIsInJnbiI6ImV1YzEifQ.XOwO-csSigfpdREhRvW73Hs-tSbeNz-G28fww1Yus0A,  // ← replace
+    MONDAY_API_TOKEN : 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYzNzA0NjM0OCwiYWFpIjoxMSwidWlkIjo5OTkyNjU0NCwiaWFkIjoiMjAyNi0wMy0yNFQxMzo0ODozNC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MzM4MjY0ODIsInJnbiI6ImV1YzEifQ.DLNTt-gSVp7ppIkJ8BQlmp89e77YaevMYmzM9EcmkTM',  // ← replace
     MONDAY_BOARD_ID  : 5093640587,   // ← replace (numbers only, no quotes needed around the value)
 
-    COL_CATEGORY : 'status',
-    COL_BODY     : 'long_text',
-    COL_DATE     : 'date',
-    COL_OWNER    : 'text',
-    COL_LINK     : 'text0',
-    COL_ACTIVE   : 'checkbox',
+    COL_CATEGORY : 'status',           // Status column
+    COL_BODY     : 'long_text_mm1rkqd7',  // Body (Long Text)
+    COL_DATE     : 'date4',               // Date
+    COL_OWNER    : 'text_mm1r89v3',       // Owner
+    COL_LINK     : 'link_mm1r7v0d',       // Link (link type)
+    COL_ACTIVE   : 'boolean_mm1rvygg',   // Active (Checkbox)
   };
 
 /* ═══════════════════════════════════════════════════════════
@@ -598,8 +598,13 @@ html,body{
   function colVal(item,id){
     const c=(item.column_values||[]).find(c=>c.id===id);
     if(!c) return '';
+    // Status/dropdown — extract label
     if(c.type==='color'||c.type==='status'){
       try{return JSON.parse(c.value)?.label||c.text||'';}catch{return c.text||'';}
+    }
+    // Link column — monday stores {url, text} in value JSON; extract the URL
+    if(c.type==='link'){
+      try{return JSON.parse(c.value)?.url||c.text||'';}catch{return c.text||'';}
     }
     return c.text||'';
   }
